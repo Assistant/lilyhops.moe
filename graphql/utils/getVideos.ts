@@ -1,29 +1,32 @@
 import path from 'path'
 import fs, { readdirSync, readFileSync } from 'fs'
-import type { VideoType, SelectorType, ResponseType, GetVideoProps } from 'graphql/schema'
+import type { VideoType, SelectorType, ResponseType, GetVideoProps, TypeType } from 'graphql/schema'
+import { getRoot, getRegex } from 'graphql/utils/VideoProps'
 import type { VodData, ClipData } from 'types/natives'
 
-const getVideo = (props: GetVideoProps, selector: SelectorType) => {
-  const videoFiles: string[] = readdirSync(path.resolve(`./public/${props.root}`)).filter((value: string) => /.*\.mp4$/.test(value))
+const getVideos = (type: TypeType, selector: SelectorType) => {
+  const root: string = getRoot(type)
+  const regex: RegExp = getRegex(type)
+  const videoFiles: string[] = readdirSync(path.resolve(`./public/${root}`)).filter((value: string) => /.*\.mp4$/.test(value))
   let response: ResponseType = { videos: [] }
   let min: number = 0
   let max: number = -1
   let videoData: VideoType[] = videoFiles.map((value: string) => {
-    const _id: RegExpMatchArray | null = value.match(props.regex)
+    const _id: RegExpMatchArray | null = value.match(regex)
     if (_id === null) return
     if (_id.length === 0) return
     const id: string = _id[1]
     try {
-      const data: VodData | ClipData = JSON.parse(readFileSync(path.resolve(`./public/${props.root}`, `${id}.json`)).toString())
+      const data: VodData | ClipData = JSON.parse(readFileSync(path.resolve(`./public/${root}`, `${id}.json`)).toString())
       const video: VideoType = {
         id: id,
         title: data.title,
         duration: `${data.duration}`,
-        type: props.type,
+        type: type,
         created: `${data.created_at}`,
-        videoUrl: `/${props.root}/${value}`,
-        subtitleUrl: getSubtitle(id, props.type, props.root),
-        thumbnailUrl: `/${props.root}/${id}.jpg`,
+        videoUrl: `/${root}/${value}`,
+        subtitleUrl: getSubtitle(id, type, root),
+        thumbnailUrl: `/${root}/${id}.jpg`,
       }
       return video
     } catch (err) {
@@ -44,6 +47,7 @@ const getVideo = (props: GetVideoProps, selector: SelectorType) => {
     response.nextId = videoData[max].id
     response.videos = videoData.slice(min, max)
   } else {
+    response.nextId = ''
     response.videos = videoData.slice(min)
   }
 
@@ -67,10 +71,5 @@ const dateSort = (first: VideoType, second: VideoType): number => {
   return Date.parse(second.created) - Date.parse(first.created)
 }
 
-const vodsProps: GetVideoProps = {root: 'lily', regex: /v(\d+).mp4$/, type: 'vod'}
-const highlightsProps: GetVideoProps = {root: 'lily/highlights', regex: /v(\d+).mp4$/, type: 'highlight'}
-const clipsProps: GetVideoProps = {root: 'lily/clips', regex: /^(.*)\.mp4$/, type: 'clip'}
-
-export default getVideo
+export default getVideos
 export { getSubtitle, selectorUsed, dateSort }
-export { vodsProps, highlightsProps, clipsProps }

@@ -1,11 +1,12 @@
 import { gql } from 'apollo-server-micro'
 
+export type TypeType = 'vod' | 'highlight' | 'clip'
 export type VideoType = {
   id: string,
   title: string,
   duration: string,
   created: string,
-  type: 'vod' | 'highlight' | 'clip',
+  type: TypeType,
   videoUrl: string,
   subtitleUrl?: string,
   thumbnailUrl: string,
@@ -21,7 +22,7 @@ export type ResponseType = {
   nextId?: string,
 }
 export type GetVideoProps = {
-  type: 'vod' | 'highlight' | 'clip',
+  type: TypeType,
   root: string,
   regex: RegExp,
 }

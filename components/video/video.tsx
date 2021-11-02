@@ -1,13 +1,13 @@
 import { NextRouter, useRouter } from 'next/router'
 import DefaultErrorPage from 'next/error'
-import { Loader } from '../../components/utils/loader'
-import { ErrorPage } from '../../components/utils/error'
-import { VodData } from '../../components/utils/types/vods'
+import { Loader } from 'components/utils/loader'
+import { ErrorPage } from 'components/utils/error'
 import { VideoJsPlayer } from 'video.js';
 import VREPlayer from 'videojs-react-enhanced';
-import SubtitlesOctopus from '../../public/lily/js/subtitles-octopus'
-import { libassOptions } from '../../components/utils/types/libass-wasm'
-import { GetVodProps, GetVodsProps, VideoData } from '../utils/types/video'
+import SubtitlesOctopus from 'public/lily/js/subtitles-octopus'
+import { libassOptions } from 'types/libass-wasm'
+import { VideoData } from 'graphql/utils/Video'
+import { TypeType } from 'graphql/schema';
 
 export const getPaths = () => {
   return {
@@ -16,40 +16,17 @@ export const getPaths = () => {
   }
 }
 
-export const getVodArgs = (root: string, regex: RegExp, type: string, id: string): GetVodProps => {
-  const getVodsProps: GetVodsProps = {
-    root: root,
-    regex: regex,
-    type: type === 'clips' ? 'clip' : 'vod',
-  }
-  const getVodProps: GetVodProps = {
-    id: id,
-    getVodsProps: getVodsProps,
-  }
-  return getVodProps
-}
-
-export const getVodProps = (videoData: VideoData, id: string, type: string) => {
+export const errorProps = (code: number, type: TypeType): { props: VideoProps } => {
   return {
-    props: {
-      id: id,
-      vod: videoData.data,
-      video: videoData.srcName,
-      type: type,
-    },
-  }
-}
-
-export const errorProps = (code: number, type: string) => {
-  return {
-    props: {
+     props: {
       id: '',
-      vod: {
+      video: {
         id: '',
         title: '',
-        duration: '0s',
+        videoUrl: '',
+        subtitleUrl: '',
+        thumbnailUrl: '',
       },
-      video: '',
       type: type,
       error: code,
     }
@@ -58,9 +35,8 @@ export const errorProps = (code: number, type: string) => {
 
 export type VideoProps = {
   id: string,
-  vod: VodData,
-  video: string,
-  type: 'vods'|'highlights'|'clips'
+  video: VideoData,
+  type: 'vod'|'highlight'|'clip'
   error?: number,
 }
 
@@ -86,33 +62,19 @@ export default function Video(props: VideoProps) {
   if(router.isFallback) {
     return <Loader />
   }
-  if(props.error){
+  
+  const { video, error } = props
+  if(error){
     return (
       <ErrorPage>
-        <DefaultErrorPage statusCode={props.error}/>
+        <DefaultErrorPage statusCode={error}/>
       </ErrorPage>
     )
   }
 
-  let prefix: string 
-  switch (props.type) {
-    case 'vods': {
-      prefix = ""
-      break
-    }
-    case 'highlights': {
-      prefix = "highlights/"
-      break
-    }
-    case 'clips': {
-      prefix = "clips/"
-      break
-    }
-  }
-
-  const src: string = `/lily/${prefix}${props.video}`
-  const poster: string = `/lily/${prefix}${props.id}.jpg`
-  const subUrl: string = `/lily/${prefix}${props.id}.ssa.br`
+  const src: string = video.videoUrl
+  const poster: string = video.thumbnailUrl
+  const subUrl: string = video.subtitleUrl
 
   const resources: VREPlayer.IResources = {
     sources: [
@@ -141,9 +103,10 @@ export default function Video(props: VideoProps) {
             timeOffset: -6,
           }
           const octopus = new SubtitlesOctopus(subtitleOptions)
+          return octopus
         }}
       />
-      <h1 className='font-title font-bold overflow-ellipsis whitespace-nowrap overflow-hidden text-gray-800 m-0 p-4 text-6xl' title={props.vod.title}>{props.vod.title}</h1>
+      <h1 className='font-title font-bold overflow-ellipsis whitespace-nowrap overflow-hidden text-gray-800 m-0 p-4 text-6xl' title={video.title}>{video.title}</h1>
     </>
   )
 }

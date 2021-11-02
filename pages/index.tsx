@@ -1,4 +1,4 @@
-import { Loader } from '../components/utils/loader'
+import { Loader } from 'components/utils/loader'
 
 export default function Home() {
   return (

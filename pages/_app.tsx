@@ -1,10 +1,10 @@
 //import 'preact/debug'
 import 'tailwindcss/tailwind.css'
-import '../styles/global.css'
+import 'styles/global.css'
 import 'video.js/dist/video-js.css'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import { Layout } from '../components/layout/layout'
+import { Layout } from 'components/layout/layout'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
