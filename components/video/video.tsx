@@ -18,7 +18,7 @@ export const getPaths = () => {
 
 export const errorProps = (code: number, type: TypeType): { props: VideoProps } => {
   return {
-     props: {
+    props: {
       id: '',
       video: {
         id: '',
