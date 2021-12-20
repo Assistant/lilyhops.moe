@@ -18,6 +18,7 @@ const getVideos = (type: TypeType, selector: SelectorType) => {
     const id: string = _id[1]
     try {
       const data: VodData | ClipData = JSON.parse(readFileSync(path.resolve(`./public/${root}`, `${id}.json`)).toString())
+      if (data.hasOwnProperty('hidden')) return
       const video: VideoType = {
         id: id,
         title: data.title,

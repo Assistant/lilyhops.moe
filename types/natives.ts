@@ -16,6 +16,7 @@ export type VodData = {
   type?: string,
   duration: string,
   muted_segments?: any,
+  hidden?: string,
 }
 
 export type ClipData = {
@@ -34,4 +35,5 @@ export type ClipData = {
   created_at: string,
   thumbnail_url: string,
   duration: number,
+  hidden?: string,
 }
