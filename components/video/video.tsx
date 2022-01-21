@@ -2,12 +2,14 @@ import { NextRouter, useRouter } from 'next/router'
 import DefaultErrorPage from 'next/error'
 import { Loader } from 'components/utils/loader'
 import { ErrorPage } from 'components/utils/error'
-import { VideoJsPlayer } from 'video.js';
-import VREPlayer from 'videojs-react-enhanced';
+import { VideoJsPlayer } from 'video.js'
+import 'videojs-hotkeys'
+import VREPlayer from 'videojs-react-enhanced'
 import SubtitlesOctopus from 'public/lily/js/subtitles-octopus'
 import { libassOptions } from 'types/libass-wasm'
 import { VideoData } from 'graphql/utils/Video'
-import { TypeType } from 'graphql/schema';
+import { TypeType } from 'graphql/schema'
+import { VideoJsHotkeysOptions } from 'videojs-hotkeys'
 
 export const getPaths = () => {
   return {
@@ -51,11 +53,15 @@ const hideList: string[] = [
   'pictureInPictureToggle',
   'playbackRateMenuButton',
 ]
+const videoJsHotkeysOptions: VideoJsHotkeysOptions = {
+  alwaysCaptureHotkeys: true,
+  captureDocumentHotkeys: true,
+}
 export const vsjOptions = {
   playerOptions,
   videojsOptions,
   hideList,
-} 
+}
 
 export default function Video(props: VideoProps) {
   const router: NextRouter = useRouter()
@@ -96,6 +102,11 @@ export default function Video(props: VideoProps) {
           resources={resources}
           hideList={vsjOptions.hideList}
           onReady={(player: VideoJsPlayer) => {
+            try {
+              player.hotkeys(videoJsHotkeysOptions)
+            } catch (e) {
+              console.warn(e)
+            }            
 
             const subtitleOptions: libassOptions = {
               video: player.contentEl().getElementsByTagName('video')[0],
