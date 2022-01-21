@@ -4,8 +4,11 @@ module.exports = {
   theme: {
     extend: {
       maxHeight: {
-        'test': '1vh',
         '3/4': '75vh',
+       },
+       maxWidth: {
+        '3/4': '75vw',
+        'video': 'min(100vw - 1rem, (100vh - 10rem) * 16 / 9)',
        },
       fontFamily: {
         title: ["'Varela Round'"]

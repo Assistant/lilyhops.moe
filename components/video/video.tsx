@@ -88,25 +88,27 @@ export default function Video(props: VideoProps) {
 
   return (
     <>
-      <VREPlayer 
-        playerOptions={vsjOptions.playerOptions}
-        videojsOptions={vsjOptions.videojsOptions}
-        resources={resources}
-        hideList={vsjOptions.hideList}
-        onReady={(player: VideoJsPlayer) => {
+      <h1 className='font-title font-bold overflow-ellipsis whitespace-nowrap overflow-hidden text-gray-800 md:mx-0 p-4 text-base md:text-6xl' title={video.title}>{video.title}</h1>
+      <div className='md:max-w-video md:max-w-video-h mx-4 md:mx-auto'>
+        <VREPlayer 
+          playerOptions={vsjOptions.playerOptions}
+          videojsOptions={vsjOptions.videojsOptions}
+          resources={resources}
+          hideList={vsjOptions.hideList}
+          onReady={(player: VideoJsPlayer) => {
 
-          const subtitleOptions: libassOptions = {
-            video: player.contentEl().getElementsByTagName('video')[0],
-            subUrl,
-            workerUrl: '/lily/js/subtitles-octopus-worker.js',
-            legacyWorkerUrl: '/lily/js/subtitles-octopus-worker-legacy.js',
-            timeOffset: -6,
-          }
-          const octopus = new SubtitlesOctopus(subtitleOptions)
-          return octopus
-        }}
-      />
-      <h1 className='font-title font-bold overflow-ellipsis whitespace-nowrap overflow-hidden text-gray-800 m-0 p-4 text-6xl' title={video.title}>{video.title}</h1>
+            const subtitleOptions: libassOptions = {
+              video: player.contentEl().getElementsByTagName('video')[0],
+              subUrl,
+              workerUrl: '/lily/js/subtitles-octopus-worker.js',
+              legacyWorkerUrl: '/lily/js/subtitles-octopus-worker-legacy.js',
+              timeOffset: -6,
+            }
+            const octopus = new SubtitlesOctopus(subtitleOptions)
+            return octopus
+          }}
+        />
+      </div>
     </>
   )
 }
