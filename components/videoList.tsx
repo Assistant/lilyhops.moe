@@ -1,6 +1,6 @@
 import { inifiniLoader } from 'components/utils/loader'
 import { useState } from 'react'
-import InfiniteScroll from 'react-infinite-scroll-component';
+import InfiniteScroll from 'react-infinite-scroll-component'
 import Thumbnail, { ThumbnailProps } from 'components/video/thumbnail'
 import fetchVideoList from 'graphql/utils/fetchVideoList'
 import { ResponseListType, VideoListData } from 'graphql/utils/VideoList'

@@ -1,4 +1,4 @@
-import type { ComponentChildren } from "preact";
+import type { ComponentChildren } from "preact"
 import { Navbar, NavbarProps } from "./navbar/navbar"
 
 type Props = {

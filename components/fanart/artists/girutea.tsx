@@ -1,4 +1,4 @@
-import { SocialProps } from "../social";
+import { SocialProps } from "../social"
 
 const socials: SocialProps[] = [
   {
