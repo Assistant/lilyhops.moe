@@ -3,13 +3,15 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
-      maxHeight: {
-        '3/4': '75vh',
-       },
-       maxWidth: {
-        '3/4': '75vw',
+      colors: {
+        "green": {
+          "light": "#94ec7c",
+          "dark": "#36b24f",
+        },
+      },
+      maxWidth: {
         'video': 'min(100vw - 1rem, (100vh - 10rem) * 16 / 9)',
-       },
+      },
       fontFamily: {
         title: ["'Varela Round'"]
       },
