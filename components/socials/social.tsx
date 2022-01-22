@@ -1,3 +1,4 @@
+import { SizeProp } from '@fortawesome/fontawesome-svg-core'
 import { Icon } from './icons'
 
 export type SocialTypes = 'twitter' | 'deviantArt' | 'instagram' | 'tumblr' | 'twitch' | 'youtube' | 'patreon' | 'merch' | 'email'
@@ -7,10 +8,10 @@ export type SocialProps = {
   type: SocialTypes,
 }
 
-export default function Social(props: SocialProps) {
+export default function Social(props: SocialProps, className: string = '', size: SizeProp = '2x') {
   return (
     <a href={props.link} title={props.title}>
-      {Icon(props.type)}
+      {Icon(props.type, className, size)}
     </a>
   )
 }
