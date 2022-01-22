@@ -94,8 +94,8 @@ export default function Video(props: VideoProps) {
 
   return (
     <>
-      <h1 className='font-title font-bold overflow-ellipsis whitespace-nowrap overflow-hidden text-gray-800 md:mx-0 p-4 text-base md:text-6xl' title={video.title}>{video.title}</h1>
-      <div className='md:max-w-video md:max-w-video-h mx-4 md:mx-auto'>
+      <h1 className='font-title font-bold overflow-ellipsis whitespace-nowrap overflow-hidden text-gray-800 p-6 text-base md:text-6xl' title={video.title}>{video.title}</h1>
+      <div className='md:max-w-video mx-6 md:mx-auto'>
         <VREPlayer 
           playerOptions={vsjOptions.playerOptions}
           videojsOptions={vsjOptions.videojsOptions}
