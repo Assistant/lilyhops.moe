@@ -29,7 +29,7 @@ export const Burger = (props: BurgerProps) => {
           </svg>
         </button>
       </div>
-      <div className={`font-title text-3xl mt-5 md:mt-0 border-t-2 md:flex w-full md:w-auto text-right text-bold md:border-none border-green-900 ${getBurger(!burger)}`}>
+      <div className={`font-title text-3xl mt-5 md:mt-0 border-t-2 md:!flex w-full md:w-auto text-right text-bold md:border-none border-green-900 ${getBurger(!burger)}`}>
         {props.links.map((value: NavbarLink) => {
           if (getColor(value.text)) return <Link key={value.text} href={value.href}><a className={`block md:inline-block p-4 md:py-2 border-b-2 md:border-none text-green-500 border-green-500`}>{value.text}</a></Link>
           else return <Link key={value.text} href={value.href}><a className={`block md:inline-block p-4 md:py-2 border-b-2 md:border-none ${colors}`}>{value.text}</a></Link>

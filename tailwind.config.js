@@ -1,6 +1,5 @@
 module.exports = {
-  purge: ['./components/**/*.tsx', './pages/**/*.tsx','./public/**/*.html'], //add this line
-  darkMode: false, // or 'media' or 'class'
+  content: ['./components/**/*.tsx', './pages/**/*.tsx','./public/**/*.html'], //add this line
   theme: {
     extend: {
       colors: {
@@ -24,9 +23,6 @@ module.exports = {
         '-15': '-3.75rem',
       }
     }
-  },
-  variants: {
-    extend: {},
   },
   plugins: [
     require('@tailwindcss/aspect-ratio')

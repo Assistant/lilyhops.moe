@@ -32,6 +32,6 @@ export const LeftIcon = (props: SidesProps) => {
 }
 
 export const RightIcon = (props: SidesProps) => {
-  if (props.path === '/') return <div className='md:flex md:visible hidden'></div>
-  else return <div className='w-10 md:mx-1 md:flex md:visible hidden'></div>
+  if (props.path === '/') return <div className='md:!flex hidden'></div>
+  else return <div className='w-10 md:mx-1 md:!flex hidden'></div>
 }
