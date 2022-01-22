@@ -12,7 +12,7 @@ export type ThumbnailProps = {
 export default function Thumbnail(props: ThumbnailProps) {
   return (
     <div>
-      <h3 title={props.title} className='font-title font-bold overflow-ellipsis whitespace-nowrap overflow-hidden text-gray-800 my-2 text-2xl'>
+      <h3 title={props.title} className='font-title font-bold overflow-ellipsis whitespace-nowrap overflow-hidden text-gray-800 mt-3 mb-1 text-2xl'>
         {props.title}
       </h3>
       <Duration value={props.duration} />
