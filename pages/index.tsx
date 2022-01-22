@@ -13,7 +13,7 @@ export default function Home() {
         </div>
       </div>
       <div className={`relative`}>
-        <img src='/lily/images/girutea-506.png' />
+        <img src='/lily/images/girutea-506.png' alt='Cute picture of Lily by Girutea' />
         <div className={`absolute block h-full w-full top-0 opacity-0 hover:opacity-100`}>
           <div className={`absolute left-1/2 transform -translate-x-1/2 bottom-0 p-4 bg-black bg-opacity-50 rounded-xl flex flex-wrap items-center justify-center gap-x-3 md:gap-x-6`}>
             { giruSocials.map((social) => Social(social, 'text-green-500 hover:text-green-300')) }
