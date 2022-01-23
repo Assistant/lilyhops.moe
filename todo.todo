@@ -1,8 +1,0 @@
-- [x] Dedublicate video stuff into functions
-- [x] Use /.mp4$/ files as a source of truth
-- [x] Add clips api
-- [x] Add clips page
-- [x] Make navbar
-- [x] Do page layout
-- [] /pages/index.tsx
-- [] Fix new image optimizing on production
