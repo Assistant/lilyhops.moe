@@ -56,6 +56,7 @@ export default function VideoList(props: VideoListProps) {
             link: `/${props.type}s/${video.id}`,
             title: video.title,
             duration: video.duration,
+            created: video.created,
             image: `/${props.root}/${video.id}.jpg`,
           }
           return <Thumbnail key={video.id} {...thumbProps}/>

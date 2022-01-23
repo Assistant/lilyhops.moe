@@ -2,7 +2,7 @@ import { VideoType, ResponseType, TypeType } from "graphql/schema"
 import getVideos from "./getVideos"
 import { pageCount, ResponseListType } from "./VideoList"
 
-const simplify = (video: VideoType) => { return { id: video.id, title: video.title, duration: video.duration }}
+const simplify = (video: VideoType) => { return { id: video.id, title: video.title, duration: video.duration, created: video.created }}
 const simplifyVideoData = (response: ResponseType): ResponseListType => {
   return {
     insert: response.insert?.map(simplify),

@@ -2,6 +2,7 @@ export type VideoListData = {
   id: string,
   title: string,
   duration: string,
+  created: string,
 }
 export type ResponseListType = {
   insert?: VideoListData[],
@@ -17,11 +18,13 @@ query Query($selector: Selector) {
       id
       title
       duration
+      created
     }
     videos {
       id
       title
       duration
+      created
     }
     nextId
   }
@@ -34,11 +37,13 @@ query Query($selector: Selector) {
       id
       title
       duration
+      created
     }
     videos {
       id
       title
       duration
+      created
     }
     nextId
   }
@@ -51,11 +56,13 @@ query Query($selector: Selector) {
       id
       title
       duration
+      created
     }
     videos {
       id
       title
       duration
+      created
     }
     nextId
   }
