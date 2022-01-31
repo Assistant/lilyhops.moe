@@ -19,15 +19,16 @@ export default function VideoList(props: VideoListProps) {
   const [videos, setVideos] = useState(props.videos)
   const [start, setStart] = useState(props.videos[0].id)
   const [next, setNext] = useState(props.next)
-
   const [hasMore, setHasMore] = useState(true)
+
   if (next.length <= 0) setHasMore(false)
   function isVideoListDataArr(object: VideoListData[] | undefined): object is VideoListData[] {
     return (object !== null && object !== undefined && object.length > 0)
   }
+
   const getMoreVideos = async () => {
     const response: ResponseListType = await fetchVideoList(props.query, {limit: props.pageCount, id: next, start: start})
-    if (response.nextId === null || response.nextId === undefined || response.nextId === '') {
+    if (response.nextId === null || response.nextId === undefined) {
       setHasMore(false)
     } else {
       setNext(response.nextId)

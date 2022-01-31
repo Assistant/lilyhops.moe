@@ -1,6 +1,6 @@
 import path from 'path'
 import fs, { readdirSync, readFileSync } from 'fs'
-import type { VideoType, SelectorType, ResponseType, GetVideoProps, TypeType } from 'graphql/schema'
+import type { VideoType, SelectorType, TypeType } from 'graphql/schema'
 import { getRoot, getRegex } from 'graphql/utils/VideoProps'
 import type { VodData, ClipData } from 'types/natives'
 
@@ -8,10 +8,7 @@ const getVideos = (type: TypeType, selector: SelectorType) => {
   const root: string = getRoot(type)
   const regex: RegExp = getRegex(type)
   const videoFiles: string[] = readdirSync(path.resolve(`./public/${root}`)).filter((value: string) => /.*\.mp4$/.test(value))
-  let response: ResponseType = { videos: [] }
-  let min: number = 0
-  let max: number = -1
-  let videoData: VideoType[] = videoFiles.map((value: string) => {
+  const videoData: VideoType[] = videoFiles.map((value: string) => {
     const _id: RegExpMatchArray | null = value.match(regex)
     if (_id === null) return
     if (_id.length === 0) return
@@ -34,33 +31,24 @@ const getVideos = (type: TypeType, selector: SelectorType) => {
       console.error(err)
       return
     }
-  }).filter((value): value is VideoType => !!value)
-  videoData.sort(dateSort)
+  }).filter((value): value is VideoType => !!value).sort(dateSort)
 
-  if (selectorUsed(selector, 'id')) {
-    min = videoData.findIndex((element) => element.id === selector.id )
-  }
-  if (selectorUsed(selector, 'limit') && !!selector.limit) {
-    max = min + selector.limit
-  }
+  const min: number = selectorUsed(selector, 'id') ? videoData.findIndex((element) => element.id === selector.id ) : 0
+  const max: number = selectorUsed(selector, 'limit') && !!selector.limit ? min + selector.limit : -1
 
-  if (max >= 0 && max < videoData.length) {
-    response.nextId = videoData[max].id
-    response.videos = videoData.slice(min, max)
-  } else {
-    response.nextId = ''
-    response.videos = videoData.slice(min)
-  }
+  const maxValid: boolean = max >= 0 && max < videoData.length
+  const insertValid: boolean = selectorUsed(selector, 'start') && !!selector.start && selector.start !== videoData[0].id
 
-  if (selectorUsed(selector, 'start') && !!selector.start) {
-    response.insert = videoData.slice(0, videoData.findIndex((element) => element.id === selector.start ))
+  return {
+    insert: insertValid ? videoData.slice(0, videoData.findIndex((element) => element.id === selector.start )) : undefined,
+    videos: maxValid ? videoData.slice(min, max) : videoData.slice(min),
+    nextId: maxValid ? videoData[max].id : undefined,
   }
-  return response
 }
 
 const getSubtitle = (id: string, type: string, root: string) => {
   const filename: string = `/${root}/${id}.${type === 'clip' ? 'chat.json' : 'ssa.br'}`
-  if (fs.existsSync(`./public${filename}`)) return filename 
+  if (fs.existsSync(`./public${filename}`)) return filename
   else return
 }
 
