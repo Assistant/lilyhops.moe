@@ -12,7 +12,7 @@ export type NavbarLink = {
 }
 
 export const Burger = (props: BurgerProps) => {
-  let [burger, setBurger] = useState(false)
+  const [burger, setBurger] = useState(false)
   const toggle = () => setBurger(!burger)
   const getBurger = (burger: boolean) => burger ? 'hidden' : ''
   const getColor = (title: string) => props.path.toLowerCase().includes(title.toLowerCase()) ? 'text-green-500' : ''
