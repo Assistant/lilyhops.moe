@@ -12,13 +12,8 @@ export default function Vod(props: VideoProps) {
 }
 
 export const getStaticProps: GetStaticProps = (context: GetStaticPropsContext) => {
-  const _id = context.params?.id 
-  let id: string
-  if (typeof _id == 'string') {
-    id = _id
-  } else {
-    return errorProps(500, type)
-  }
+  const id = context.params?.id
+  if (typeof id !== 'string') return errorProps(500, type)
 
   const response: ResponseVideoType = getVideo(type, id)
   if (response.videos[0] === undefined) return errorProps(404, type)
