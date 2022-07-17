@@ -15,7 +15,7 @@ export const Navbar = (props: NavbarProps) => {
   const router = useRouter()
   const burgerProps: BurgerProps = {links: props.links, path: router.pathname}
   return (
-    <nav className='p-5 bg-green-200 md:p-1 flex flex-wrap items-center justify-between'>
+    <nav className='p-5 bg-green-200 md:p-1 flex flex-wrap items-center justify-between shadow-md'>
       <LeftIcon path={router.pathname} />
       <Burger {...burgerProps} />
       <RightIcon path={router.pathname} />
