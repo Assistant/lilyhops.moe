@@ -16,12 +16,12 @@ const getVideos = (type: TypeType, selector: SelectorType) => {
     try {
       const data: VodData | ClipData = JSON.parse(readFileSync(path.resolve(`./public/${root}`, `${id}.json`)).toString())
       if (data.hasOwnProperty('hidden')) return
-      const description = type === 'clip' ? '' : data.description    
+      const description = isVod(data, type) ? data.description : ''
       const video: VideoType = {
         id: id,
         title: data.title,
         duration: `${data.duration}`,
-        description: description,
+        description: `${description}`,
         type: type,
         created: `${data.created_at}`,
         videoUrl: `/${root}/${value}`,
@@ -46,6 +46,10 @@ const getVideos = (type: TypeType, selector: SelectorType) => {
     videos: maxValid ? videoData.slice(min, max) : videoData.slice(min),
     nextId: maxValid ? videoData[max].id : '0',
   }
+}
+
+function isVod(data: ClipData | VodData, type: TypeType): data is VodData {
+    return type !== 'clip'
 }
 
 const getSubtitle = (id: string, type: string, root: string) => {
