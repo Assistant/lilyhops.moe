@@ -21,14 +21,14 @@ export default function VideoList(props: VideoListProps) {
   const [next, setNext] = useState(props.next)
   const [hasMore, setHasMore] = useState(true)
 
-  if (next.length <= 0) setHasMore(false)
+  if (next.length <= 0 || next === '0') setHasMore(false)
   function isVideoListDataArr(object: VideoListData[] | undefined): object is VideoListData[] {
     return (object !== null && object !== undefined && object.length > 0)
   }
 
   const getMoreVideos = async () => {
-    const response: ResponseListType = await fetchVideoList(props.query, {limit: props.pageCount, id: next, start: start})
-    if (response.nextId === null || response.nextId === undefined) {
+    const response: ResponseListType = await fetchVideoList(props.query, { limit: props.pageCount, id: next, start: start })
+    if (response.nextId === '0' || response.nextId == null) {
       setHasMore(false)
     } else {
       setNext(response.nextId)
@@ -40,7 +40,7 @@ export default function VideoList(props: VideoListProps) {
     }
     if (response.videos.length === 0) return
     setVideos((current: VideoListData[]) => [...current, ...response.videos])
-  }  
+  }
 
   return (
     <InfiniteScroll
@@ -51,7 +51,7 @@ export default function VideoList(props: VideoListProps) {
       loader={inifiniLoader}
     >
       {
-        videos.map((video: VideoListData) => { 
+        videos.map((video: VideoListData) => {
           const thumbProps: ThumbnailProps = {
             id: video.id,
             link: `/${props.type}s/${video.id}`,
@@ -60,7 +60,7 @@ export default function VideoList(props: VideoListProps) {
             created: video.created,
             image: `/${props.root}/${video.id}.jpg`,
           }
-          return <Thumbnail key={video.id} {...thumbProps}/>
+          return <Thumbnail key={video.id} {...thumbProps} />
         })
       }
     </InfiniteScroll>

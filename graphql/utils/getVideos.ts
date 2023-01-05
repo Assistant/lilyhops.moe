@@ -33,16 +33,16 @@ const getVideos = (type: TypeType, selector: SelectorType) => {
     }
   }).filter((value): value is VideoType => !!value).sort(dateSort)
 
-  const min: number = selectorUsed(selector, 'id') ? videoData.findIndex((element) => element.id === selector.id ) : 0
+  const min: number = selectorUsed(selector, 'id') ? videoData.findIndex((element) => element.id === selector.id) : 0
   const max: number = selectorUsed(selector, 'limit') && !!selector.limit ? min + selector.limit : -1
 
   const maxValid: boolean = max >= 0 && max < videoData.length
   const insertValid: boolean = selectorUsed(selector, 'start') && !!selector.start && selector.start !== videoData[0].id
 
   return {
-    insert: insertValid ? videoData.slice(0, videoData.findIndex((element) => element.id === selector.start )) : undefined,
+    insert: insertValid ? videoData.slice(0, videoData.findIndex((element) => element.id === selector.start)) : undefined,
     videos: maxValid ? videoData.slice(min, max) : videoData.slice(min),
-    nextId: maxValid ? videoData[max].id : undefined,
+    nextId: maxValid ? videoData[max].id : '0',
   }
 }
 

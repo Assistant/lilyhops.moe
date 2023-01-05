@@ -1,4 +1,4 @@
-import { GetServerSideProps , GetServerSidePropsContext } from 'next'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import getVideoList from 'graphql/utils/getVideoList'
 import { pageCount, ResponseListType } from 'graphql/utils/VideoList'
 import VideoList, { VideoListProps } from 'components/videoList'
@@ -13,7 +13,7 @@ export default function Clips(props: VideoListProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps  = async (context: GetServerSidePropsContext) => {
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const response: ResponseListType = getVideoList(type)
   return {
     props: {

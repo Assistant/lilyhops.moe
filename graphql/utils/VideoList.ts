@@ -7,7 +7,7 @@ export type VideoListData = {
 export type ResponseListType = {
   insert?: VideoListData[],
   videos: VideoListData[],
-  nextId?: string,
+  nextId: string,
 }
 
 const pageCount: number = 24

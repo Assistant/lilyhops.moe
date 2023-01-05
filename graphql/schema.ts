@@ -19,7 +19,7 @@ export type SelectorType = {
 export type ResponseType = {
   insert?: VideoType[],
   videos: VideoType[],
-  nextId?: string,
+  nextId: string,
 }
 export type GetVideoProps = {
   type: TypeType,
