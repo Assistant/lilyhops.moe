@@ -5,6 +5,7 @@ export type VideoType = {
   id: string,
   title: string,
   duration: string,
+  description: string,
   created: string,
   type: TypeType,
   videoUrl: string,
@@ -44,6 +45,10 @@ export const typeDefs = gql`
     Length of the video, either in seconds (34) or labeled (1h2m3s).
     """
     duration: String!
+    """
+    Video description
+    """
+    description: String!
     """
     Date when this video was created.
     """

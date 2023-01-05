@@ -2,7 +2,7 @@ import { VideoType, ResponseType, TypeType } from "graphql/schema"
 import getVideos from "./getVideos"
 import type { ResponseVideoType, VideoData } from './Video'
 
-const simplify = (video: VideoType): VideoData => { return { id: video.id, title: video.title, videoUrl: video.videoUrl, thumbnailUrl: video.thumbnailUrl, subtitleUrl: video.subtitleUrl ?? '' }}
+const simplify = (video: VideoType): VideoData => { return { id: video.id, title: video.title, description: video.description, videoUrl: video.videoUrl, thumbnailUrl: video.thumbnailUrl, subtitleUrl: video.subtitleUrl ?? '' }}
 const simplifyVideoData = (response: ResponseType): ResponseVideoType => {
   return {
     videos: response.videos.map(simplify),

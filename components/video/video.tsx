@@ -10,6 +10,7 @@ import { libassOptions } from 'types/libass-wasm'
 import { VideoData } from 'graphql/utils/Video'
 import { TypeType } from 'graphql/schema'
 import { VideoJsHotkeysOptions } from 'videojs-hotkeys'
+import Description from './description'
 
 export const getPaths = () => {
   return {
@@ -25,6 +26,7 @@ export const errorProps = (code: number, type: TypeType): { props: VideoProps } 
       video: {
         id: '',
         title: '',
+        description: '',
         videoUrl: '',
         subtitleUrl: '',
         thumbnailUrl: '',
@@ -94,8 +96,9 @@ export default function Video(props: VideoProps) {
 
   return (
     <>
-      <h1 className='font-title font-bold text-ellipsis whitespace-nowrap overflow-hidden text-gray-800 p-6 text-base md:text-6xl' title={video.title}>{video.title}</h1>
-      <div className='md:max-w-video mx-6 md:mx-auto'>
+      <h1 className='font-title font-bold text-ellipsis whitespace-nowrap overflow-hidden text-gray-800 p-6 pb-1 text-base md:text-6xl' title={video.title}>{video.title}</h1>
+      <Description description={video.description} />      
+      <div className='md:max-w-video mx-6 mb-6 md:mx-auto'>
         <VREPlayer 
           playerOptions={vsjOptions.playerOptions}
           videojsOptions={vsjOptions.videojsOptions}

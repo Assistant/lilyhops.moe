@@ -1,6 +1,7 @@
 export type VideoData = {
   id: string,
   title: string,
+  description: string,
   videoUrl: string,
   thumbnailUrl: string,
   subtitleUrl: string,
@@ -15,6 +16,7 @@ const VOD_QUERY = `
       videos {
         id
         title
+        description
         videoUrl
         thumbnailUrl
         subtitleUrl
@@ -28,6 +30,7 @@ const HIGHLIGHT_QUERY = `
       videos {
         id
         title
+        description
         videoUrl
         thumbnailUrl
         subtitleUrl
@@ -41,6 +44,7 @@ const CLIP_QUERY = `
       videos {
         id
         title
+        description
         videoUrl
         thumbnailUrl
         subtitleUrl
