@@ -2,6 +2,11 @@ import { SocialProps } from "../social"
 
 const socials: SocialProps[] = [
   {
+    link: 'https://bsky.app/profile/lilyhops.bsky.social',
+    title: 'Follow @lilyhops.bsky.social on BlueSky!',
+    type: 'bluesky'
+  },
+  {
     link: 'https://twitter.com/lilyhops',
     title: 'Follow @lilyhops on Twitter!',
     type: 'twitter'

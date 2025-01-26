@@ -1,7 +1,7 @@
 import { SizeProp } from '@fortawesome/fontawesome-svg-core'
 import { Icon } from './icons'
 
-export type SocialTypes = 'twitter' | 'deviantArt' | 'instagram' | 'tumblr' | 'twitch' | 'youtube' | 'patreon' | 'merch' | 'email'
+export type SocialTypes = 'bluesky' | 'twitter' | 'deviantArt' | 'instagram' | 'tumblr' | 'twitch' | 'youtube' | 'patreon' | 'merch' | 'email'
 export type SocialProps = {
   title: string,
   link: string,

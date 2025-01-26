@@ -2,6 +2,11 @@ import { SocialProps } from "../social"
 
 const socials: SocialProps[] = [
   {
+    link: 'https://bsky.app/profile/girutea.bsky.social',
+    title: 'Follow @girutea.bsky.social on BlueSky!',
+    type: 'bluesky'
+  },
+  {
     link: 'https://twitter.com/GiruteaCafe',
     title: 'Follow @GiruteaCafe on Twitter!',
     type: 'twitter'
