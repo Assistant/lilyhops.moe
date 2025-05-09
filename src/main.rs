@@ -6,12 +6,12 @@ use rocket::request::FromParam;
 use rocket::{get, launch, routes};
 use rocket_dyn_templates::{context, Template};
 use serde::{Deserialize, Deserializer, Serialize};
+use std::env;
 use std::ffi::OsStr;
 use std::fs::{read_dir, read_to_string, DirEntry};
 use std::path::{Path, PathBuf};
 use std::sync::LazyLock;
 use std::time::{Duration, UNIX_EPOCH};
-use std::{env, usize};
 use tracing_subscriber::EnvFilter;
 
 static VODS: LazyLock<String> = LazyLock::new(|| env::var("VODS").unwrap_or("vods".into()));
@@ -40,9 +40,9 @@ enum Kind {
 impl Kind {
     fn path(&self) -> &String {
         match self {
-            Kind::Vods => &*VODS,
-            Kind::Highlights => &*HIGHLIGHTS,
-            Kind::Clips => &*CLIPS,
+            Kind::Vods => &VODS,
+            Kind::Highlights => &HIGHLIGHTS,
+            Kind::Clips => &CLIPS,
         }
     }
     fn name(&self) -> &str {
@@ -158,8 +158,8 @@ fn file_tuple(file: DirEntry) -> Option<(PathBuf, u64)> {
     ))
 }
 
-fn is_json(path: &PathBuf) -> bool {
-    path.extension() == Some(&OsStr::new("json"))
+fn is_json(path: &Path) -> bool {
+    path.extension() == Some(OsStr::new("json"))
         && path
             .file_stem()
             .and_then(OsStr::to_str)
