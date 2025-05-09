@@ -170,7 +170,8 @@ fn is_json(path: &Path) -> bool {
 struct Entry {
     id: String,
     title: String,
-    description: Option<String>,
+    #[serde(default)]
+    description: String,
     created_at: DateTime<Utc>,
     #[serde(deserialize_with = "parse_duration_flex")]
     duration: Duration,
@@ -192,7 +193,7 @@ impl From<Entry> for DisplayEntry {
         Self {
             id: value.id,
             title: value.title,
-            description: value.description.unwrap_or("".to_string()),
+            description: value.description,
             created_at: value.created_at.format("%Y-%m-%d").to_string(),
             created_at_long: value.created_at.to_rfc3339_opts(Secs, true),
             duration: format_duration(value.duration),
