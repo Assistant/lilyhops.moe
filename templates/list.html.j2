@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="darkreader-lock">
+  <link href="/style.css" rel="stylesheet">
+</head>
+
+<body>
+{% include "nav" %}
+{%- set remainder = count % 60 -%}
+{%- set pages = count // 60 -%}
+
+{% for i in range(0, pages) %}
+  <iframe src="/{{ kind }}/lists/{{ timestamp }}-{{ i }}" loading="lazy"></iframe>
+{%- endfor -%}
+
+{% if remainder > 0 %}
+  <iframe src="/{{ kind }}/lists/{{ timestamp }}-{{ pages }}" style="--count: {{ remainder }}" loading="lazy"></iframe>
+{%- endif %}
+</body>
+
+</html>

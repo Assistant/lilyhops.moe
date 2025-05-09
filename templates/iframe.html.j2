@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="darkreader-lock">
+  <link href="/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <main>
+    {%- for entry in entries %}
+    <a href="/{{ kind }}/{{ entry.id }}" target="_parent">
+      <article>
+        <h3 title="{{ entry.title }}">{{ entry.title }}</h3>
+        <figure>
+          <figcaption>{{ entry.duration }}</figcaption>
+          <figcaption title="{{ entry.created_at_long }}">{{ entry.created_at }}</figcaption>
+          <img src="/{{ kind }}/{{ entry.id }}.jpg" alt="{{ entry.title }}" />
+        </figure>
+      </article>
+    </a>
+    {%- endfor %}
+  </main>
+</body>
+
+</html>

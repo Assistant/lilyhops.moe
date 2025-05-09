@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="darkreader-lock">
+  <link href="/style.css" rel="stylesheet">
+</head>
+
+<body>
+{% include "nav" %}
+  <h2>{{ entry.title }}</h2>
+  <video controls poster="/{{ kind }}/{{ entry.id }}.jpg">
+    <source src="/{{ kind }}/{{ entry.id }}.mp4" type="video/mp4" />
+    <track label="English" srclang="en" src="/{{ kind }}/{{ entry.id }}.vtt" default />
+  </video>
+  <h4>{{ entry.description }}</h4>
+</body>
+
+</html>
