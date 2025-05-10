@@ -74,12 +74,29 @@ async fn index() -> Template {
 
 #[get("/<kind>")]
 async fn lists(kind: Kind) -> Template {
-    render_list(kind.path(), kind.name())
+    let (timestamp, items) = get_items(kind.path(), None);
+    let count = items.len();
+    let kind = kind.name();
+
+    Template::render("list", context! { timestamp, count, kind })
 }
 
 #[get("/<kind>/lists/<cursor>")]
 async fn iframes(kind: Kind, cursor: &str) -> Result<Template, Status> {
-    render_iframe(kind.path(), kind.name(), cursor)
+    let (t, p) = cursor.split_once('-').ok_or(Status::BadRequest)?;
+    let timestamp = t.parse().map_err(|_| Status::BadRequest)?;
+    let page: usize = p.parse().map_err(|_| Status::BadRequest)?;
+
+    let (_, items) = get_items(kind.path(), Some(timestamp));
+    let kind = kind.name();
+    let entries: Vec<DisplayEntry> = items
+        .into_iter()
+        .skip(page * 60)
+        .take(60)
+        .map(DisplayEntry::from)
+        .collect();
+
+    Ok(Template::render("iframe", context! { entries, kind }))
 }
 
 #[get("/<kind>/<id>")]
@@ -91,29 +108,6 @@ async fn viewer(kind: Kind, id: &str) -> Result<Template, Status> {
         )),
         None => Err(Status::NotFound),
     }
-}
-
-fn render_iframe(path: impl AsRef<Path>, kind: &str, cursor: &str) -> Result<Template, Status> {
-    let (t, p) = cursor.split_once('-').ok_or(Status::BadRequest)?;
-    let timestamp = t.parse().map_err(|_| Status::BadRequest)?;
-    let page: usize = p.parse().map_err(|_| Status::BadRequest)?;
-
-    let (_, items) = get_items(path, Some(timestamp));
-    let entries: Vec<DisplayEntry> = items
-        .into_iter()
-        .skip(page * 60)
-        .take(60)
-        .map(DisplayEntry::from)
-        .collect();
-
-    Ok(Template::render("iframe", context! { entries, kind }))
-}
-
-fn render_list(path: impl AsRef<Path>, kind: &str) -> Template {
-    let (timestamp, items) = get_items(path, None);
-    let count = items.len();
-
-    Template::render("list", context! { timestamp, count, kind })
 }
 
 fn get_items(path: impl AsRef<Path>, cutoff: Option<u64>) -> (u64, Vec<Entry>) {
