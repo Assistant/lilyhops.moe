@@ -14,6 +14,7 @@
   <video controls poster="/{{ kind }}/{{ entry.id }}.jpg">
     <source src="/{{ kind }}/{{ entry.id }}.mp4" type="video/mp4" />
     <track label="English" srclang="en" src="/{{ kind }}/{{ entry.id }}.vtt" default />
+    <track kind="chapters" srclang="en" src="/{{ kind }}/{{ entry.id }}-chapters.vtt" />
   </video>
   <h4>{{ entry.description }}</h4>
 </body>
