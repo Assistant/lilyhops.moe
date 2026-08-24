@@ -20,7 +20,7 @@ static HIGHLIGHTS: LazyLock<String> =
 static CLIPS: LazyLock<String> = LazyLock::new(|| env::var("CLIPS").unwrap_or("clips".into()));
 
 #[launch]
-async fn rocket() -> _ {
+fn rocket() -> _ {
     tracing_subscriber::fmt()
         .with_env_filter(EnvFilter::from_default_env())
         .init();
@@ -30,7 +30,7 @@ async fn rocket() -> _ {
         .attach(Template::fairing())
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 enum Kind {
     Vods,
     Highlights,
@@ -68,12 +68,12 @@ impl<'r> FromParam<'r> for Kind {
 }
 
 #[get("/")]
-async fn index() -> Template {
+fn index() -> Template {
     Template::render("index", context! {})
 }
 
 #[get("/<kind>")]
-async fn lists(kind: Kind) -> Template {
+fn lists(kind: Kind) -> Template {
     let (timestamp, items) = get_items(kind.path(), None);
     let count = items.len();
     let kind = kind.name();
@@ -82,7 +82,7 @@ async fn lists(kind: Kind) -> Template {
 }
 
 #[get("/<kind>/lists/<cursor>")]
-async fn iframes(kind: Kind, cursor: &str) -> Result<Template, Status> {
+fn iframes(kind: Kind, cursor: &str) -> Result<Template, Status> {
     let (t, p) = cursor.split_once('-').ok_or(Status::BadRequest)?;
     let timestamp = t.parse().map_err(|_| Status::BadRequest)?;
     let page: usize = p.parse().map_err(|_| Status::BadRequest)?;
@@ -100,7 +100,7 @@ async fn iframes(kind: Kind, cursor: &str) -> Result<Template, Status> {
 }
 
 #[get("/<kind>/<id>")]
-async fn viewer(kind: Kind, id: &str) -> Result<Template, Status> {
+fn viewer(kind: Kind, id: &str) -> Result<Template, Status> {
     match get_all_items(kind.path()).find(|(e, _)| e.id == id) {
         Some((entry, _)) => Ok(Template::render(
             "viewer",
@@ -111,7 +111,7 @@ async fn viewer(kind: Kind, id: &str) -> Result<Template, Status> {
 }
 
 fn get_items(path: impl AsRef<Path>, cutoff: Option<u64>) -> (u64, Vec<Entry>) {
-    let items = get_all_items(path).filter(|(_, t)| cutoff.map_or(true, |c| t <= &c));
+    let items = get_all_items(path).filter(|(_, t)| cutoff.is_none_or(|c| t <= &c));
 
     let (items, latest): (Vec<_>, Vec<_>) = items.unzip();
     let latest = latest.into_iter().max().unwrap_or(0);
@@ -157,7 +157,7 @@ fn is_json(path: &Path) -> bool {
         && path
             .file_stem()
             .and_then(OsStr::to_str)
-            .map_or(false, |s| !s.contains('.'))
+            .is_some_and(|s| !s.contains('.'))
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -220,7 +220,7 @@ fn format_duration(duration: Duration) -> String {
         let h = seconds / 3600;
         let m = (seconds % 3600) / 60;
         let s = seconds % 60;
-        format!("{:02}:{:02}:{:02}", h, m, s)
+        format!("{h:02}:{m:02}:{s:02}")
     } else {
         format!("{seconds:02}")
     }
