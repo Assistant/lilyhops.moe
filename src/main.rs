@@ -99,12 +99,12 @@ fn iframes(kind: Kind, cursor: &str) -> Result<Template, Status> {
     Ok(Template::render("iframe", context! { entries, kind }))
 }
 
-#[get("/<kind>/<id>")]
-fn viewer(kind: Kind, id: &str) -> Result<Template, Status> {
+#[get("/<kind>/<id>?<t>")]
+fn viewer(kind: Kind, id: &str, t: Option<i32>) -> Result<Template, Status> {
     match get_all_items(kind.path()).find(|(e, _)| e.id == id) {
         Some((entry, _)) => Ok(Template::render(
             "viewer",
-            context! { entry, kind: kind.name() },
+            context! { entry, kind: kind.name(), t },
         )),
         None => Err(Status::NotFound),
     }

@@ -12,7 +12,7 @@
 {% include "nav" %}
   <h2 title="{{ entry.title }}">{{ entry.title }}</h2>
   <video controls poster="/{{ kind }}/{{ entry.id }}.jpg">
-    <source src="/{{ kind }}/{{ entry.id }}.mp4" type="video/mp4" />
+    <source src="/{{ kind }}/{{ entry.id }}.mp4{% if t is not none %}#t={{ t }}{% endif %}" type="video/mp4" />
     <track label="English" srclang="en" src="/{{ kind }}/{{ entry.id }}.vtt" default />
     <track kind="chapters" srclang="en" src="/{{ kind }}/{{ entry.id }}-chapters.vtt" />
   </video>
