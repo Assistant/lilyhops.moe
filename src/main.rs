@@ -100,7 +100,7 @@ fn iframes(kind: Kind, cursor: &str) -> Result<Template, Status> {
 }
 
 #[get("/<kind>/<id>?<t>")]
-fn viewer(kind: Kind, id: &str, t: Option<i32>) -> Result<Template, Status> {
+fn viewer(kind: Kind, id: &str, t: Option<String>) -> Result<Template, Status> {
     match get_all_items(kind.path()).find(|(e, _)| e.id == id) {
         Some((entry, _)) => Ok(Template::render(
             "viewer",
