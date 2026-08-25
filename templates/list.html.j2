@@ -13,6 +13,13 @@
 {%- set remainder = count % 60 -%}
 {%- set pages = count // 60 -%}
 
+{% if kind != "clips" %}
+  <form action="/{{ kind }}/search?query={{ query }}">
+    <input name="query" type="text">
+    <button type="submit">Search chat</button>
+  </form>
+{%- endif %}
+
 {% for i in range(0, pages) %}
   <iframe src="/{{ kind }}/lists/{{ timestamp }}-{{ i }}" loading="lazy"></iframe>
 {%- endfor -%}

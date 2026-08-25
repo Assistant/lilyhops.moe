@@ -1,9 +1,13 @@
 use chrono::SecondsFormat::Secs;
 use chrono::{DateTime, Utc};
 use humantime::parse_duration;
+use memchr::memmem::Finder;
+use regex::{Captures, Regex};
+use rocket::http::uri::fmt::{self, FromUriParam, UriDisplay};
 use rocket::http::Status;
 use rocket::request::FromParam;
-use rocket::{get, launch, routes};
+use rocket::response::Redirect;
+use rocket::{get, launch, post, routes, uri};
 use rocket_dyn_templates::{context, Template};
 use serde::{Deserialize, Deserializer, Serialize};
 use std::env;
@@ -18,6 +22,11 @@ static VODS: LazyLock<String> = LazyLock::new(|| env::var("VODS").unwrap_or("vod
 static HIGHLIGHTS: LazyLock<String> =
     LazyLock::new(|| env::var("HIGHLIGHTS").unwrap_or("highlights".into()));
 static CLIPS: LazyLock<String> = LazyLock::new(|| env::var("CLIPS").unwrap_or("clips".into()));
+static CHAT_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r"^Dialogue:\s*Marked=\d+,\s*(?P<start>\d+:\d{2}:\d{2}\.\d+),(?:[^,]*,){7}\s*\{\\c&H(?P<color>[0-9A-Fa-f]+)&\}(?P<username>[^{]*?)\s*\{\\c&H[0-9A-Fa-f]+&\}:?\s*(?P<message>.*)$"
+    ).unwrap()
+});
 
 #[launch]
 fn rocket() -> _ {
@@ -26,7 +35,10 @@ fn rocket() -> _ {
         .init();
 
     rocket::build()
-        .mount("/", routes![index, lists, iframes, viewer])
+        .mount(
+            "/",
+            routes![index, lists, iframes, viewer, search, search_post],
+        )
         .attach(Template::fairing())
 }
 
@@ -54,6 +66,20 @@ impl Kind {
     }
 }
 
+impl UriDisplay<fmt::Path> for Kind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_, fmt::Path>) -> std::fmt::Result {
+        f.write_raw(self.name())
+    }
+}
+
+impl FromUriParam<fmt::Path, Kind> for Kind {
+    type Target = Kind;
+
+    fn from_uri_param(value: Kind) -> Self::Target {
+        value
+    }
+}
+
 impl<'r> FromParam<'r> for Kind {
     type Error = &'r str;
 
@@ -65,6 +91,14 @@ impl<'r> FromParam<'r> for Kind {
             _ => Err("Invalid option"),
         }
     }
+}
+
+#[derive(Serialize, Debug)]
+struct SearchResult {
+    url: String,
+    username: String,
+    color: String,
+    message: String,
 }
 
 #[get("/")]
@@ -108,6 +142,49 @@ fn viewer(kind: Kind, id: &str, t: Option<String>) -> Result<Template, Status> {
         )),
         None => Err(Status::NotFound),
     }
+}
+
+#[get("/<kind>/search?<query>")]
+async fn search(kind: Kind, query: String) -> Template {
+    let mut results = vec![];
+    let finder = Finder::new(&query);
+    for (entry, _) in get_all_items(kind.path()) {
+        if let Ok(file) = read_to_string(format!("{}/{}.ssa", kind.path(), entry.id)) {
+            let matches = file
+                .lines()
+                .filter(|l| finder.find(l.as_bytes()).is_some())
+                .filter_map(chat)
+                .map(|c| extract(&c, kind, &entry))
+                .collect::<Vec<_>>();
+            if !matches.is_empty() {
+                results.push((entry.title, matches));
+            }
+        }
+    }
+    Template::render("search", context! { results })
+}
+
+fn chat(line: &'_ str) -> Option<Captures<'_>> {
+    CHAT_REGEX.captures(line)
+}
+
+fn extract(captures: &Captures, kind: Kind, entry: &Entry) -> SearchResult {
+    SearchResult {
+        url: uri!(viewer(
+            kind,
+            &entry.id,
+            Some(captures["start"].split(".").next().unwrap())
+        ))
+        .to_string(),
+        username: captures["username"].to_string(),
+        color: captures["color"].to_string(),
+        message: captures["message"].to_string(),
+    }
+}
+
+#[post("/<kind>/search", data = "<query>")]
+fn search_post(kind: Kind, query: String) -> Redirect {
+    Redirect::to(uri!(search(kind, query)))
 }
 
 fn get_items(path: impl AsRef<Path>, cutoff: Option<u64>) -> (u64, Vec<Entry>) {
