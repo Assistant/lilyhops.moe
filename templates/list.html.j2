@@ -14,7 +14,7 @@
 {%- set pages = count // 60 -%}
 
 {% if kind != "clips" %}
-  <form action="/{{ kind }}/search?query={{ query }}">
+  <form action="/{{ kind }}/search">
     <input name="query" type="text">
     <button type="submit">Search chat</button>
   </form>

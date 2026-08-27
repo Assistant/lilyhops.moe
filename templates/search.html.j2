@@ -11,6 +11,11 @@
 <body>
 {% include "nav" %}
 
+<form action="/{{ kind }}/search">
+  <input name="query" type="text">
+  <button type="submit">Search chat</button>
+</form>
+
 {% for result in results %}
   <h1>{{ result[0] }}</h1>
   {% for line in result[1] %}

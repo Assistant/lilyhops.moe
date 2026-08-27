@@ -105,9 +105,8 @@ fn index() -> Template {
 fn lists(kind: Kind) -> Template {
     let (timestamp, items) = get_items(kind.path(), None);
     let count = items.len();
-    let kind = kind.name();
 
-    Template::render("list", context! { timestamp, count, kind })
+    Template::render("list", context! { timestamp, count, kind: kind.name() })
 }
 
 #[get("/<kind>/lists/<cursor>")]
@@ -156,7 +155,7 @@ fn search(kind: Kind, query: String) -> Template {
             }
         }
     }
-    Template::render("search", context! { results })
+    Template::render("search", context! { results, kind: kind.name() })
 }
 
 fn extract(captures: &Captures, kind: Kind, entry: &Entry) -> SearchResult {
