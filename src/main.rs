@@ -16,7 +16,6 @@ use std::fs::{read_dir, read_to_string, DirEntry};
 use std::path::{Path, PathBuf};
 use std::sync::LazyLock;
 use std::time::{Duration, UNIX_EPOCH};
-use tracing_subscriber::EnvFilter;
 
 static VODS: LazyLock<String> = LazyLock::new(|| env::var("VODS").unwrap_or("vods".into()));
 static HIGHLIGHTS: LazyLock<String> =
@@ -30,10 +29,6 @@ static CHAT_REGEX: LazyLock<Regex> = LazyLock::new(|| {
 
 #[launch]
 fn rocket() -> _ {
-    tracing_subscriber::fmt()
-        .with_env_filter(EnvFilter::from_default_env())
-        .init();
-
     rocket::build()
         .mount(
             "/",
