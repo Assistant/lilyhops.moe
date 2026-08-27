@@ -145,7 +145,7 @@ fn viewer(kind: Kind, id: &str, t: Option<String>) -> Result<Template, Status> {
 }
 
 #[get("/<kind>/search?<query>")]
-async fn search(kind: Kind, query: String) -> Template {
+fn search(kind: Kind, query: String) -> Template {
     let mut results = vec![];
     let finder = Finder::new(&query);
     for (entry, _) in get_all_items(kind.path()) {
@@ -153,7 +153,7 @@ async fn search(kind: Kind, query: String) -> Template {
             let matches = file
                 .lines()
                 .filter(|l| finder.find(l.as_bytes()).is_some())
-                .filter_map(chat)
+                .filter_map(|l| CHAT_REGEX.captures(l))
                 .map(|c| extract(&c, kind, &entry))
                 .collect::<Vec<_>>();
             if !matches.is_empty() {
@@ -164,21 +164,17 @@ async fn search(kind: Kind, query: String) -> Template {
     Template::render("search", context! { results })
 }
 
-fn chat(line: &'_ str) -> Option<Captures<'_>> {
-    CHAT_REGEX.captures(line)
-}
-
 fn extract(captures: &Captures, kind: Kind, entry: &Entry) -> SearchResult {
     SearchResult {
         url: uri!(viewer(
             kind,
             &entry.id,
-            Some(captures["start"].split(".").next().unwrap())
+            Some(captures["start"].split('.').next().unwrap())
         ))
         .to_string(),
-        username: captures["username"].to_string(),
-        color: captures["color"].to_string(),
-        message: captures["message"].to_string(),
+        username: captures["username"].into(),
+        color: captures["color"].into(),
+        message: captures["message"].into(),
     }
 }
 
